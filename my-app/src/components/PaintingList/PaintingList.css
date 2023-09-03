@@ -1,0 +1,12 @@
+.PaintingList {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    max-width: 1170px;
+    margin: -10px auto;
+}
+
+.PaintingList__item {
+    margin-right: 10px;
+}
