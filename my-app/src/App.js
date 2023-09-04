@@ -1,6 +1,8 @@
 // Модули
 import React, { Component } from 'react';
 import shortid from 'shortid';
+import { BsFill1CircleFill } from "react-icons/bs";
+import { BsFillAirplaneFill } from "react-icons/bs";
 // Компоненты
 // import Counter from './components/Counter';
 // import Dropdown from './components/Dropdown';
@@ -10,7 +12,7 @@ import shortid from 'shortid';
 // import Container from './components/Container/Container';
 // import AppBar from './components/AppBar/AppBar';
 import TodoList from './components/TodoList';
-import initialTodos from './components/TodoList/todos.json';
+// import initialTodos from './components/TodoList/todos.json';
 
 // import Form from './components/Form';
 import TodoEditor from './components/TodoEditor';
@@ -19,6 +21,7 @@ import TodoEditor from './components/TodoEditor';
 // import paintings from './paintings.json';
 // import './components/PaintingList/PaintingList.css';
 // import Notification from './components/Notification/Notification';
+import Modal from './components/Modal';
 
 // const colorPickerOptions = [
 //   { label: 'red', color: '#F44336' },
@@ -32,8 +35,31 @@ import TodoEditor from './components/TodoEditor';
 class App extends Component {
   // храним заняения
   state = {
-    todos: initialTodos,
+    todos: [],
     filter: '',
+    showModal: false,
+  };
+  // прояитать с локалсторидж
+  componentDidMount() {
+    const todos = localStorage.getItem('todos');
+    const parsedTodos = JSON.parse(todos);
+
+    if (parsedTodos) {
+      this.setState({ todos: parsedTodos });
+    }
+  }
+
+  // записываем в локалсторидж
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.todos !== prevState.todos) {
+      localStorage.setItem('todos', JSON.stringify(this.state.todos));
+    }
+  }
+
+  toggleModal = () => {
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+    }));
   };
 
   addTodo = text => {
@@ -68,7 +94,7 @@ class App extends Component {
   };
 
   render() {
-    const { todos, filter } = this.state;
+    const { todos, filter, showModal } = this.state;
 
     // const totalTodoCount = todos.length;
     const completedTodoCount = todos.reduce(
@@ -84,6 +110,21 @@ class App extends Component {
 
     return (
       <>
+        <button type="button" onClick={this.toggleModal}>
+          <BsFill1CircleFill size={60} fill='red' aria-label='цифра один'  />
+          Открыть модалку
+          <BsFillAirplaneFill size="60" color='red' aria-label='самолет' />
+        </button>
+        {showModal && (
+          <Modal onClose={this.toggleModal}>
+            <h1>Привет это контент модалки</h1>
+            <p>fdflkljfkdliobvmvcjkfdklldfsdds</p>
+            <button type="button" onClick={this.toggleModal}>
+              Закрыть
+            </button>
+          </Modal>
+        )}
+
         <TodoEditor onSubmit={this.addTodo} />
         <h1>Головна</h1>
         <label>
